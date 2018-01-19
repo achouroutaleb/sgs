@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CollorationDeGraphes"  basedir="." default="compile">
+  <dirname property="global.basedir" file="${ant.file.global}"/>
+  <property file="${global.basedir}/global.properties"/>  
+  <echo>${global.basedir}</echo>
+  <!-- target qui supprime les classes compilé et le JAR -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}/${ant.project.name}.jar"/>
+  </target>
+  
+  <!-- target qui compile le code Java dans le répertoire build -->
+  <target name="compile"> 
+    <!-- création d'un répertoire pour la compilation -->
+    <mkdir dir="${build.dir}"/>
+    <!-- compilation des sources Java -->
+    <javac srcdir="${src.dir}" destdir="${build.dir}"/>
+  </target>
+  
+  <!-- target qui crée le JAR -->
+  <target name="create-jar" depends="clean,compile">
+    
+    <!-- création d'un répertoire pour le JAR -->
+    <mkdir dir="${dist.dir}"/>
+    
+    <!-- création du JAR-->
+    <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+      <manifest>
+	<!-- on indique la classe principale du JAR-->
+	<attribute name="Main-Class" value="${main-class}"/>
+      </manifest>
+    </jar>	
+    
+  </target>
+  
+  <!-- exécution du JAR -->
+  <target name="run">
+    <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>		
+  </target> 
+  
+  <target name="build-and-run" depends="create-jar,run"/>
+</project>
